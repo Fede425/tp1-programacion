@@ -1,0 +1,131 @@
+SubProceso turnoReserva(horario,dia,vacuna,nombre,dni,edad,vacunaElegida,DiaElegido,HorarioElegido,opcionDia,opcionHorario,opcionVacuna,contadorPacientes,)
+	Definir contadorVacunas Como Entero
+	Dimension contadorVacunas[10]
+	Repetir
+		//Imprime Agenda disponible de turnos.
+		Escribir"Agenda disponible del vacunatorio"
+		Para i = 0 Hasta 4 con paso 1 Hacer
+			Escribir sin saltar"Los turnos disponibles son: ", i + 1,".",dia[i], " "
+			Para x = 0 Hasta 6 con paso 1 Hacer
+				Escribir Sin Saltar x + 1,".",horario[x] " "
+			FinPara
+			Escribir""
+		FinPara
+		
+		//Seleccion de turno.
+		Escribir"ingrese el dia y horario que desea guardar(ejemplo 4 7) "
+		leer opcionDia, opcionHorario
+		Si opcionDia < 1 o opcionDia > 5 o opcionHorario < 1 o opcionHorario > 7 Entonces
+			Escribir"Ingreso una opcion incorrecta, por favor vuelva a ingresar"
+		FinSi
+		Si  horario[opcionHorario] == " " Entonces
+			Escribir "Ese dia no se encuentra disponible,vuelva a ingresar otro"
+		FinSi
+	Mientras Que (opcionDia < 1 o opcionDia > 5 o opcionHorario < 1 o opcionHorario > 7) o horario[opcionHorario - 1] = " "
+	
+	//Menu de opciones vacuna.
+	Repetir
+		Escribir"Opciones Vacuna"
+		Para i = 0 Hasta 5 con paso 1 Hacer
+			Escribir i + 1, " ", vacuna[i]
+		FinPara
+		Escribir "Seleccione una opcion"
+		Leer opcionVacuna
+		//validacion de stock.
+		//Se puede pensar como un SubProceso.o funcion que retorne un booleano.
+		///averiguar si la inicializacion de este arreglo es necesaria o arranaca por defecto en 0.
+		///Para i = 0 Hasta 5 con paso 1 Hacer
+		///stockVacunas[i] = 0 
+		///FinPara
+		Si contadorVacunas[opcionVacuna - 1] <= 10 Entonces
+		contadorVacunas[opcionVacuna - 1] = contadorVacunas[opcionVacuna - 1] + 1
+		FinSi
+		Si opcionVacuna < 1 o opcionVacuna > 6 Entonces
+			Escribir"ingreso una opcion no valida"
+		FinSi
+	Mientras Que opcionVacuna >= 0 y opcionVacuna > 5 y contador[opcionVacuna -1] < 10
+
+	//Datos de pacientes
+	Escribir"ingrese su nombre"
+	leer nombre[contadorPacientes]
+	Escribir"ingrese su dni"
+	leer dni[contadorPacientes]
+	Escribir"edad"
+	leer edad[contadorPacientes]
+	vacunaElegida[contadorPacientes] = vacuna[opcionVacuna - 1]
+	DiaElegido[contadorPacientes] = dia[opcionDia - 1]
+	HorarioElegido[contadorPacientes] = horario[opcionHorario - 1]
+	
+	//Resumen.
+	Escribir "Resumen...."
+	Escribir "Nombre y Apellido: ",nombre[contadorPacientes]
+	Escribir "Dni: ",Dni[contadorPacientes]
+	Escribir "Edad: ",edad[contadorPacientes]
+	Escribir "Vacuna a aplicar:",vacunaElegida[contadorPacientes]
+	Escribir "Dia turno: ",DiaElegido[contadorPacientes]
+	Escribir "Horario Turno: ",HorarioElegido[contadorPacientes]
+	horario[opcionHorario - 1] = " "
+	contadorPacientes = contadorPacientes + 1;
+FinSubProceso
+
+Algoritmo Principal_main
+	//Definicion de variables y carga de datos.
+	Definir opcionMenu,Dni,opcionDia,opcionHorario,opcionVacuna,contadorPacientes Como Entero
+	Definir edad como real
+	Definir vacunaElegida,nombre,DiaElegido,HorarioElegido,vacuna,salida,horario,dia Como Cadena
+	Dimension nombre[100],dni[100],edad[100],vacunaElegida[100],DiaElegido[100],horarioElegido[100],vacuna[6],horario[7],dia[5]
+	contadorPacientes = 0
+	//carga vacunas.
+	vacuna[0] = "Neumococo Conjugada"
+	vacuna[1] = "Poliomelitis"
+	vacuna[2] = "Quintuple"
+	vacuna[3] = "Rotavirus"
+	vacuna[4] = "Mengicoco"
+	vacuna[5] = "Triple Viral"
+	
+	//carga horarios.
+	horario[0] = "8:00"
+	horario[1] = "8:30"
+	horario[2] = "9:00"
+	horario[3] = "9:30"
+	horario[4] = "10:00"
+	horario[5] = "10:30"
+	horario[6] = "11:00"
+	
+	//carga de dias
+	dia[0] = "Lunes"
+	dia[1] = "Martes"
+	dia[2] = "Miercoles"
+	dia[3] = "Jueves"
+	dia[4] = "Viernes"
+	
+	//Menu de Bienvenida.
+	Repetir
+		Escribir "Bienvenido al vacunatorio UTN"
+		Escribir "Menu de opciones:"
+		Escribir "1-Reservar turno"
+		Escribir "2-Buscar paciente"
+		Escribir "3-Ver agenda vacunatorio"
+		Escribir "4-ordenar y mostrar listas de pacientes"
+		Escribir "5-listados"
+		leer opcionMenu
+		Segun opcionMenu
+			1:
+				turnoReserva(horario,dia,vacuna,nombre,dni,edad,vacunaElegida,DiaElegido,HorarioElegido,opcionDia,opcionHorario,opcionVacuna,contadorPacientes)
+			2:
+				
+			3:
+				
+			4:
+				
+			5:
+				
+		FinSegun
+		Repetir
+			Escribir "Ingrese salir para finalizar"
+			Leer salida
+			salida =  Mayusculas(salida)
+		Mientras Que salida <> "SALIR"
+	Mientras Que salida <> "SALIR"
+FinAlgoritmo
+
