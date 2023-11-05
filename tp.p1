@@ -47,7 +47,7 @@ Algoritmo Principal_main
 			Leer salida
 			salida =  Mayusculas(salida)
 		Mientras Que salida <> "SALIR" y salida <> "SEGUIR"
-	Mientras Que salida <> "SALIR" O opcionMenu > 5 O opcionMenu < 1///////ver esto
+	Mientras Que salida <> "SALIR" O opcionMenu > 5 O opcionMenu < 1
 	
 	Escribir"Saliendo del sistema"
 FinAlgoritmo
@@ -57,19 +57,21 @@ SubProceso turnoReserva(turnos,vacuna,datosPacientes,opcionDia,opcionHorario,opc
 	Definir disponibilidadVacuna Como Logico
 	disponibiidadVacuna = falso
 	Repetir
-		//agenda de disponibilidad
-		agendaDeDisponibilidad(turnos)
+        //agenda de disponibilidad
+        agendaDeDisponibilidad(turnos)
 		
-		//Seleccion de turno.
-		Escribir"Ingrese el día y horario que desea guardar(ejemplo 4 7) "
-		leer opcionDia, opcionHorario
-		Si opcionDia < 1 o opcionDia > 5 o opcionHorario < 1 o opcionHorario > 7 Entonces///
-			Escribir"Ingreso una opción incorrecta, por favor vuelva a ingresar"
-		FinSi
-		Si turnos[opcionDia - 1,opcionHorario] == "OCUPADO" Entonces
-			Escribir "Ese dia no se encuentra disponible,vuelva a ingresar otro"
-		FinSi
-	Mientras Que (opcionDia < 1 O opcionDia > 5 O opcionHorario < 1 O opcionHorario > 7) O turnos[opcionDia -1,opcionHorario] = "OCUPADO"
+        //Seleccion de turno.
+        Repetir
+            Escribir"Ingrese el día y horario que desea guardar(ejemplo 4 7) "
+            leer opcionDia, opcionHorario
+            Si opcionDia < 1 o opcionDia > 5 o opcionHorario < 1 o opcionHorario > 7 
+                Escribir"Ingreso una opción incorrecta, por favor vuelva a ingresar"
+            FinSi
+        Mientras Que opcionDia < 1 o opcionDia > 5 o opcionHorario < 1 o opcionHorario > 7
+        Si turnos[opcionDia - 1,opcionHorario] == "OCUPADO" Entonces
+            Escribir "Ese dia no se encuentra disponible,vuelva a ingresar otro"
+        FinSi
+    Mientras Que turnos[opcionDia -1,opcionHorario] = "OCUPADO"
 	Escribir "==============================================="
 	///Menu de opciones vacuna.
 	Repetir
@@ -96,6 +98,9 @@ SubProceso turnoReserva(turnos,vacuna,datosPacientes,opcionDia,opcionHorario,opc
 		Repetir
 			Escribir"Ingrese su dni:"
 			leer datosPacientes[contadorPacientes,1]
+			Si Longitud(datosPacientes[contadorPacientes,1]) < 6 o longitud(datosPacientes[contadorPacientes,1]) > 8 Entonces
+				Escribir "DNI no valido, reingreselo"
+			FinSi
 		Mientras Que Longitud(datosPacientes[contadorPacientes,1]) < 6 o longitud(datosPacientes[contadorPacientes,1]) > 8
 		Escribir"Edad:"
 		leer datosPacientes[contadorPacientes,2]
@@ -129,6 +134,9 @@ SubProceso busquedaPorDni(datosPacientes,contadorPaciente)
 	Repetir
 		Escribir "Ingrese el número de documento del paciente"
 		leer numDocumento
+		Si Longitud(numDocumento) < 6 o longitud(numDocumento) > 8 Entonces
+			Escribir "DNI no valido, reingreselo"
+		FinSi
 	Mientras Que Longitud(numDocumento) < 6 o longitud(numDocumento) > 8
 	Para i = 0 hasta contadorPaciente con paso 1 Hacer
 		Si datosPacientes[i,1] == numDocumento Entonces
