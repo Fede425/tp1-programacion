@@ -32,7 +32,7 @@ Algoritmo Principal_main
 			1:
 				turnoReserva(turnos,vacuna,datosPacientes,opcionDia,opcionHorario,opcionVacuna,contadorPacientes,contadorVacunas)//penar opcion copmo una sola
 			2:
-				busquedaPorDni(datosPacientes)
+				busquedaPorDni(datosPacientes,contadorPaciente)
 			3:
 				agendaDeDisponibilidad(turnos)
 			4: 
@@ -93,8 +93,10 @@ SubProceso turnoReserva(turnos,vacuna,datosPacientes,opcionDia,opcionHorario,opc
 	Si disponibilidadVacuna Entonces
 		Escribir"Ingrese su nombre:"
 		leer datosPacientes[contadorPacientes,0]
-		Escribir"Ingrese su dni:"
-		leer datosPacientes[contadorPacientes,1]
+		Repetir
+			Escribir"Ingrese su dni:"
+			leer datosPacientes[contadorPacientes,1]
+		Mientras Que Longitud(datosPacientes[contadorPacientes,1]) < 6 o longitud(datosPacientes[contadorPacientes,1]) > 8
 		Escribir"Edad:"
 		leer datosPacientes[contadorPacientes,2]
 		datosPacientes[contadorPacientes,3] = vacuna[opcionVacuna - 1]
@@ -119,7 +121,7 @@ FinSubProceso
 
 
 ///funcion de busqueda por dni
-SubProceso busquedaPorDni(datosPacientes)
+SubProceso busquedaPorDni(datosPacientes,contadorPaciente)
 	Definir encontrado Como Logico
 	Definir posicionEncontrado Como Entero
 	encontrado = falso
@@ -127,8 +129,8 @@ SubProceso busquedaPorDni(datosPacientes)
 	Repetir
 		Escribir "Ingrese el número de documento del paciente"
 		leer numDocumento
-	Mientras Que longitud(numDocumento) > 8 o Longitud(numDocumento) < 6 ///?
-	Para i = 0 hasta 99 con paso 1 Hacer
+	Mientras Que Longitud(numDocumento) < 6 o longitud(numDocumento) > 8
+	Para i = 0 hasta contadorPaciente con paso 1 Hacer
 		Si datosPacientes[i,1] == numDocumento Entonces
 			posicionEncontrado = i
 			encontrado = verdadero
@@ -257,7 +259,13 @@ SubProceso listados(contadorVacunas, turnos, vacuna)
     Mientras Que opcionListado <> 3
 FinSubProceso
 
-
+funcion  validacion <- validacionDatos(varCadena)
+    Definir validacion como logico
+    validacion = falso
+    Si varCadena = "" Entonces
+        validacion = Verdadero
+    FinSi
+FinFuncion
 
 SubProceso cargaDatos(vacuna,turnos)
 	
