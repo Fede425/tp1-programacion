@@ -1,14 +1,15 @@
 Algoritmo Principal_main
-	//Definicion de variables y carga de datos.
-	Definir opcionMenu Como Entero
-	Definir Dni,opcionDia,opcionHorario,opcionVacuna,contadorPacientes Como Entero
+	//Definición de variables locales y globales que se utilizan a lo largo del código 
+	Definir Dni,opcionMenu,opcionDia,opcionHorario,opcionVacuna,contadorPacientes Como Entero
 	Definir tipoOrden Como Caracter
 	Definir aux como Cadena
 	Definir indiceMinimo como Entero
-	Definir vacunaElegida,nombre,DiaElegido,HorarioElegido,vacuna,salida,turnos Como Cadena
+	Definir vacunaElegida,DiaElegido,HorarioElegido,vacuna,salida,turnos Como Cadena
 	Dimension datosPacientes[100,6],vacuna[6],horario[7],dia[5],turnos[5,8]
 	contadorPacientes = 0
-	cargaDatos(vacuna,turnos)
+	//Precarga de datos turnos como arreglo bidimensional
+	cargaDatos(vacuna,turnos) 
+	//Inicializamos el contador de vacunas de los 6 tipos
 	Definir contadorVacunas Como Entero
 	Dimension contadorVacunas[6]
 	Para i<-0 hasta 5 Hacer
@@ -27,55 +28,55 @@ Algoritmo Principal_main
 		Escribir "5-Listados"
 		leer opcionMenu
 		Escribir "================================================================================"
+		//Utilizamos una estructura switch para las distintas opciones del menú
 		Segun opcionMenu
-			1:
+			1: //Subproceso utilizado para gestionar la reservas de turnos y la carga de pacientes
 				turnoReserva(turnos,vacuna,datosPacientes,opcionDia,opcionHorario,opcionVacuna,contadorPacientes,contadorVacunas)//penar opcion copmo una sola
-			2:
+			2: //Subproceso utilizado para realizar la busqueda de un paciente por DNI
 				busquedaPorDni(datosPacientes,contadorPacientes)
-			3:
+			3: //Subproceso que arroja la agenda marcando los turnos disponibles y ocupados
 				agendaDeDisponibilidad(turnos)
-			4: 
+			4: //Subproceso que ordena los pacientes ingresados por EDAD y por VACUNA
 				ordenarPacientes(aux,tipoOrden,indiceMinimo,datosPacientes, contadorPacientes,vacuna)
-			5:  
+			5: //Subproceso que muestra la cantidad de turnos otorgados por día y por vacuna  
 				listados(datosPacientes, contadorVacunas, turnos, vacuna)
-			De Otro Modo:
-				Escribir"Opción no válida"
+			De Otro Modo: 
+				Escribir"Opción no válida" 
 		FinSegun
-		Repetir
+		Repetir //Opción de salida que permite al usuario continuar o salir 
 			Escribir "Ingrese /SALIR/ si desea salir del sistema o /SEGUIR/ si desea volver al menú principal"
 			Leer salida
-			salida =  Mayusculas(salida)
-		Mientras Que salida <> "SALIR" y salida <> "SEGUIR"
-	Mientras Que salida <> "SALIR" O opcionMenu > 5 O opcionMenu < 1
+			salida =  Mayusculas(salida) //Validación de la opción de salida
+		Mientras Que salida <> "SALIR" y salida <> "SEGUIR" // El menú se repite mientras el usuario ingrese incorrectamente el paso a seguir
+	Mientras Que salida <> "SALIR" O opcionMenu > 5 O opcionMenu < 1 
 	
-	Escribir "Saliendo del sistema"
+	Escribir "Gracias por visitar el sistema de turnos del vacunatorio UTN"
+	Escribir "Saliendo del sistema ..."
 FinAlgoritmo
 
-///funcion1-turnoreserva.
+//funcion1-turnoreserva
 SubProceso turnoReserva(turnos,vacuna,datosPacientes,opcionDia,opcionHorario,opcionVacuna,contadorPacientes Por Referencia,contadorVacunas Por Referencia)
 	Definir disponibilidadVacuna Como Logico
 	disponibiidadVacuna = falso
 	Repetir
-        //agenda de disponibilidad
         agendaDeDisponibilidad(turnos)
-		
-        //Seleccion de turno.
+		//Seleccion de turno.
         Repetir
             Escribir"Ingrese el día y horario del turno que desea reservar(ejemplo 4 7)"
             leer opcionDia, opcionHorario
             Si opcionDia < 1 o opcionDia > 5 o opcionHorario < 1 o opcionHorario > 7 
                 Escribir"Ingresó una opción incorrecta, por favor vuelva a seleccionar otro turno"
             FinSi
-        Mientras Que opcionDia < 1 o opcionDia > 5 o opcionHorario < 1 o opcionHorario > 7
-        Si turnos[opcionDia - 1,opcionHorario] == "OCUPADO" Entonces
+        Mientras Que opcionDia < 1 o opcionDia > 5 o opcionHorario < 1 o opcionHorario > 7 //Validación para que ingrese una opción correcta
+        Si turnos[opcionDia - 1,opcionHorario] == "OCUPADO" Entonces 
             Escribir "Ese turno no se encuentra disponible,vuelva a ingresar otro"
-        FinSi
-    Mientras Que turnos[opcionDia -1,opcionHorario] = "OCUPADO"
+        FinSi 
+    Mientras Que turnos[opcionDia -1,opcionHorario] = "OCUPADO" //Validamos que no se asigne un turno ocupado
 	
-	///Menu de opciones vacuna.
+	//Menu de opciones vacuna.
 	Repetir
 		Escribir "================================================================================"
-        Escribir"Opciones Vacuna"
+        Escribir"Opciones Vacuna" //Imprimimos el listado de vacunas 
         Para i = 0 Hasta 5 con paso 1 Hacer
             Escribir i + 1, " ", vacuna[i]
         FinPara
@@ -84,15 +85,15 @@ SubProceso turnoReserva(turnos,vacuna,datosPacientes,opcionDia,opcionHorario,opc
         Si opcionVacuna < 1 o opcionVacuna > 6 Entonces
             Escribir"Ingreso una opción no válida, ingrese una opción correcta"
         FinSi
-    Mientras Que (opcionVacuna <  1 O opcionVacuna > 6)
-	Si contadorVacunas[opcionVacuna - 1] < 10 Entonces
-		contadorVacunas[opcionVacuna - 1] = contadorVacunas[opcionVacuna - 1] + 1
+    Mientras Que (opcionVacuna <  1 O opcionVacuna > 6) //Validamos que ingrese una opción correcta
+	Si contadorVacunas[opcionVacuna - 1] < 10 Entonces // Corroboramos el stock de vacunas 
+		contadorVacunas[opcionVacuna - 1] = contadorVacunas[opcionVacuna - 1] + 1 
 		disponibilidadVacuna = Verdadero
 	SiNo
 		Escribir"No contamos con stock de la vacuna seleccionada"
 	FinSi
 	Escribir "================================================================================"
-	Si disponibilidadVacuna Entonces
+	Si disponibilidadVacuna Entonces //Si existe disponibilidad de la vacuna elegida solicitamos el ingreso de los datos del paciente
 		Escribir"Ingrese su nombre:"
 		leer datosPacientes[contadorPacientes,0]
 		Repetir
@@ -108,7 +109,7 @@ SubProceso turnoReserva(turnos,vacuna,datosPacientes,opcionDia,opcionHorario,opc
 		datosPacientes[contadorPacientes,4] = turnos[opcionDia - 1,0]
 		datosPacientes[contadorPacientes,5] = turnos[opcionDia - 1,opcionHorario]
 		Escribir "================================================================================"
-		//Resumen.
+		//Impresión de resumen con datos del paciente, turno y vacuna seleccionada
 		Escribir "Resumen...."
 		Escribir "Nombre y Apellido: ",datosPacientes[contadorPacientes,0]
 		Escribir "Dni: ",datosPacientes[contadorPacientes,1]
@@ -116,16 +117,14 @@ SubProceso turnoReserva(turnos,vacuna,datosPacientes,opcionDia,opcionHorario,opc
 		Escribir "Vacuna a aplicar:",datosPacientes[contadorPacientes,3]
 		Escribir "Día turno: ",datosPacientes[contadorPacientes,4]
 		Escribir "Horario Turno: ",datosPacientes[contadorPacientes,5]
-		turnos[opcionDia -1,opcionHorario] = "OCUPADO"
+		turnos[opcionDia -1,opcionHorario] = "OCUPADO" 
 		contadorPacientes = contadorPacientes + 1	
 		Escribir "================================================================================"
 	Fin Si
 	
 FinSubProceso
 
-
-
-///funcion de busqueda por dni
+//funcion de busqueda por dni
 SubProceso busquedaPorDni(datosPacientes,contadorPacientes)
 	Definir encontrado Como Logico
 	Definir posicionEncontrado Como Entero
@@ -144,7 +143,7 @@ SubProceso busquedaPorDni(datosPacientes,contadorPacientes)
 			encontrado = verdadero
 	    FinSi
 	FinPara
-	Si encontrado = Verdadero Entonces
+	Si encontrado = Verdadero Entonces //Arroja los datos del paciente si es que el DNI fue cargado
 		Escribir "Nombre y Apellido: ",datosPacientes[posicionEncontrado,0]
 		Escribir "Dni: ",datosPacientes[posicionEncontrado,1]
 		Escribir "Edad: ",datosPacientes[posicionEncontrado,2]
@@ -157,8 +156,7 @@ SubProceso busquedaPorDni(datosPacientes,contadorPacientes)
 	Escribir "================================================================================"
 FinSubProceso
 
-
-///funcion de agenda de disponibilidad
+//Subproceso de agenda de disponibilidad
 SubProceso agendaDeDisponibilidad(turnos)
 	Escribir"Agenda disponible del vacunatorio"
 	Para i = 0 Hasta 4 con paso 1 Hacer
@@ -171,13 +169,13 @@ SubProceso agendaDeDisponibilidad(turnos)
 	Escribir "================================================================================"
 FinSubProceso
 
-///funcion ordenar
+//Subproceso ordenar
 
 SubProceso ordenarPacientes(aux,tipoOrden,indiceMinimo,datosPacientes,contadorPacientes Por Referencia,vacuna)
 	Repetir
 		Escribir "Ingrese /a/ si desea ordenar por edad o /b/ si desea ordenar por vacuna"
 		leer tipoOrden
-		tipoOrden =  Mayusculas(tipoOrden)
+		tipoOrden =  Mayusculas(tipoOrden) //Validación caracter ingresado 
 		Si tipoOrden <> "A" y tipoOrden <> "B" Entonces
 			Escribir "Ingreso una opción no existente"
 		FinSi
@@ -191,7 +189,7 @@ SubProceso ordenarPacientes(aux,tipoOrden,indiceMinimo,datosPacientes,contadorPa
 					indiceMinimo = j
 				FinSi
 			FinPara
-			Para x = 0 Hasta 5 con paso 1 Hacer
+			Para x = 0 Hasta 5 con paso 1 Hacer 
 				aux = datosPacientes[i, x]
 				datosPacientes[i, x] = datosPacientes[indiceMinimo, x]
 				datosPacientes[indiceMinimo, x] = aux
@@ -228,41 +226,42 @@ SubProceso ordenarPacientes(aux,tipoOrden,indiceMinimo,datosPacientes,contadorPa
 	FinSi
 	Escribir"================================================================================"
 FinSubproceso
-///funcion listados
+
+//Subproceso listados
 SubProceso listados(datosPacientes, contadorVacunas, turnos, vacuna)
 	Definir contadorTurno Como Entero
-	
 	Definir opcionListado Como Caracter
 	Escribir "================================================================================"
-	Escribir "Menú de opciones"
-	Escribir "A-Listado de turnos por día" 
-	Escribir "B-Listado de cantidad de vacunas a aplicar por vacuna"
-	Leer opcionListado 
-	opcionListado = Mayusculas(opcionListado)
-	Si opcionListado == "A" Entonces
-		
-		Para i = 0 Hasta 4 Hacer
-			contadorTurnos = 0
-			Para j = 1 Hasta 7 Hacer
-				Si turnos[i, j] == "OCUPADO" Entonces
-				contadorTurnos = contadorTurnos + 1
-				FinSi
-					
+	Repetir
+		Escribir "Menú de opciones"
+		Escribir "A-Listado de turnos por día" 
+		Escribir "B-Listado de cantidad de vacunas a aplicar por vacuna"
+		Leer opcionListado 
+		opcionListado = Mayusculas(opcionListado)
+		Si opcionListado == "A" Entonces
+			Para i = 0 Hasta 4 Hacer
+				contadorTurnos = 0
+				Para j = 1 Hasta 7 Hacer
+					Si turnos[i, j] == "OCUPADO" Entonces
+						contadorTurnos = contadorTurnos + 1
+					FinSi
+				FinPara
+				Escribir "Día ", turnos[i, 0], ": Turnos otorgados - ", contadorTurnos
+			FinPara	
+		FinSi
+		Si opcionListado == "B" Entonces
+			Para i = 0 Hasta 5 Hacer
+				contadorVacuna = contadorVacunas[i]
+				Escribir "Vacuna ", vacuna[i], ": Cantidad a aplicar - ", contadorVacuna
 			FinPara
-			Escribir "Día ", turnos[i, 0], ": Turnos otorgados - ", contadorTurnos
-			
-			Escribir "================================================================================"
-		FinPara	
-	FinSi
-	Si opcionListado == "B" Entonces
-		Para i = 0 Hasta 5 Hacer
-			contadorVacuna = contadorVacunas[i]
-			Escribir "Vacuna ", vacuna[i], ": Cantidad a aplicar - ", contadorVacuna
-		FinPara
-	FinSi
+		FinSi	
+		Si Mayusculas(opcionListado) <> "A" y Mayusculas(opcionListado) <> "B" Entonces
+			Escribir "Ingrese una opción correcta" 
+		FinSi
+	Mientras Que Mayusculas(opcionListado) <> "A" y Mayusculas(opcionListado) <> "B"
 FinSubProceso
 
-funcion  validacion <- validacionDatos(varCadena)
+funcion  validacion <- validacionDatos(varCadena) //Subproceso para validar que no se ingrese una cadena vacía
     Definir validacion como logico
     validacion = falso
     Si varCadena = "" Entonces
