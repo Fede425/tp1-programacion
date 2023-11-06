@@ -183,7 +183,7 @@ SubProceso ordenarPacientes(aux,tipoOrden,indiceMinimo,datosPacientes,contadorPa
 		Escribir "B-Si desea ordenar pacientes por vacuna"
 		leer tipoOrden
 		tipoOrden =  Mayusculas(tipoOrden) //Validación caracter ingresado 
-		Si Mayusculas(tipoOrden) <> "A" y Mayusculas((tipoOrden) <> "B" Entonces
+		Si Mayusculas(tipoOrden) <> "A" y Mayusculas(tipoOrden) <> "B" Entonces
 			Escribir "Ingreso una opción no existente"
 		FinSi
 	Mientras Que Mayusculas(tipoOrden) <> "A" y (tipoOrden) <> "B"
@@ -224,6 +224,7 @@ SubProceso ordenarPacientes(aux,tipoOrden,indiceMinimo,datosPacientes,contadorPa
 						Escribir Sin Saltar "Vacuna a aplicar: ",datosPacientes[x,3]," - "
 						Escribir Sin saltar "Día turno: ",datosPacientes[x,4], " - "
 						Escribir Sin saltar "Horario Turno: ",datosPacientes[x,5]
+						Escribir " "
 						
 					FinSi
 				FinPara
