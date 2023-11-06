@@ -1,10 +1,8 @@
 Algoritmo Principal_main
 	//Definición de variables locales y globales que se utilizan a lo largo del código 
-	Definir Dni,opcionMenu,opcionDia,opcionHorario,opcionVacuna,contadorPacientes Como Entero
+	Definir Dni,opcionMenu,opcionDia,opcionHorario,opcionVacuna,contadorPacientes,indiceMinimo Como Entero
 	Definir tipoOrden Como Caracter
-	Definir aux como Cadena
-	Definir indiceMinimo como Entero
-	Definir vacunaElegida,DiaElegido,HorarioElegido,vacuna,salida,turnos Como Cadena
+	Definir vacunaElegida,DiaElegido,HorarioElegido,vacuna,salida,turnos,aux Como Cadena
 	Dimension datosPacientes[100,6],vacuna[6],horario[7],dia[5],turnos[5,8]
 	contadorPacientes = 0
 	//Precarga de datos turnos como arreglo bidimensional
@@ -39,7 +37,7 @@ Algoritmo Principal_main
 			4: //Subproceso que ordena los pacientes ingresados por EDAD y por VACUNA
 				ordenarPacientes(aux,tipoOrden,indiceMinimo,datosPacientes, contadorPacientes,vacuna)
 			5: //Subproceso que muestra la cantidad de turnos otorgados por día y por vacuna  
-				listados(datosPacientes, contadorVacunas, turnos, vacuna)
+				listados(contadorVacunas, turnos, vacuna)
 			De Otro Modo: 
 				Escribir"Opción no válida" 
 		FinSegun
@@ -94,17 +92,24 @@ SubProceso turnoReserva(turnos,vacuna,datosPacientes,opcionDia,opcionHorario,opc
 	FinSi
 	Escribir "================================================================================"
 	Si disponibilidadVacuna Entonces //Si existe disponibilidad de la vacuna elegida solicitamos el ingreso de los datos del paciente
-		Escribir"Ingrese su nombre:"
-		leer datosPacientes[contadorPacientes,0]
 		Repetir
-			Escribir"Ingrese su dni:"
+			Escribir"Ingrese su nombre:"
+			leer datosPacientes[contadorPacientes,0]
+		Mientras Que datosPacientes[contadorPacientes,0] = ""//validamos que no ingrese un vacio
+		Repetir
+			Escribir"Ingrese Dni:"
 			leer datosPacientes[contadorPacientes,1]
 			Si Longitud(datosPacientes[contadorPacientes,1]) < 6 o longitud(datosPacientes[contadorPacientes,1]) > 8 Entonces
 				Escribir "DNI no válido, ingrese el DNI nuevamente"
 			FinSi
 		Mientras Que Longitud(datosPacientes[contadorPacientes,1]) < 6 o longitud(datosPacientes[contadorPacientes,1]) > 8
-		Escribir"Edad:"
-		leer datosPacientes[contadorPacientes,2]
+		Repetir
+			Escribir"Ingrese edad: (0.x, en el caso pacientes menores al año)"
+			leer datosPacientes[contadorPacientes,2]
+			Si ConvertirANumero(datosPacientes[contadorPacientes,2]) > 100 O ConvertirANumero(datosPacientes[contadorPacientes,2]) < 0 Entonces
+				Escribir"ingreso una edad no valida"
+			FinSi
+		Mientras Que ConvertirANumero(datosPacientes[contadorPacientes,2]) > 100 O ConvertirANumero(datosPacientes[contadorPacientes,2]) < 0
 		datosPacientes[contadorPacientes,3] = vacuna[opcionVacuna - 1]
 		datosPacientes[contadorPacientes,4] = turnos[opcionDia - 1,0]
 		datosPacientes[contadorPacientes,5] = turnos[opcionDia - 1,opcionHorario]
@@ -158,6 +163,7 @@ FinSubProceso
 
 //Subproceso de agenda de disponibilidad
 SubProceso agendaDeDisponibilidad(turnos)
+	Escribir "Estos turnos corresponden a la siguiente semana"
 	Escribir"Agenda disponible del vacunatorio"
 	Para i = 0 Hasta 4 con paso 1 Hacer
 		Escribir sin saltar,i + 1,"-",turnos[i,0] " "
@@ -170,19 +176,20 @@ SubProceso agendaDeDisponibilidad(turnos)
 FinSubProceso
 
 //Subproceso ordenar
-
 SubProceso ordenarPacientes(aux,tipoOrden,indiceMinimo,datosPacientes,contadorPacientes Por Referencia,vacuna)
 	Repetir
-		Escribir "Ingrese /a/ si desea ordenar por edad o /b/ si desea ordenar por vacuna"
+		Escribir "Menu de ordenamiento:"
+		Escribir "A-Si desea ordenar pacientes por edad"
+		Escribir "B-Si desea ordenar pacientes por vacuna"
 		leer tipoOrden
 		tipoOrden =  Mayusculas(tipoOrden) //Validación caracter ingresado 
-		Si tipoOrden <> "A" y tipoOrden <> "B" Entonces
+		Si Mayusculas(tipoOrden) <> "A" y Mayusculas((tipoOrden) <> "B" Entonces
 			Escribir "Ingreso una opción no existente"
 		FinSi
-	Mientras Que tipoOrden <> "A" y tipoOrden <> "B"
+	Mientras Que Mayusculas(tipoOrden) <> "A" y (tipoOrden) <> "B"
 	Escribir "================================================================================"
 	Si tipoOrden == "A" Entonces
-		Para i = 0 Hasta contadorPacientes - 2
+		Para i = 0 Hasta contadorPacientes - 2// Se realiza una busqueda por seleccion para ordenar por edad
 			indiceMinimo = i
 			Para j = i + 1 Hasta contadorPacientes -1
 				Si ConvertirANumero(datosPacientes[j, 2]) < ConvertirANumero(datosPacientes[indiceMinimo, 2]) Entonces
@@ -195,7 +202,7 @@ SubProceso ordenarPacientes(aux,tipoOrden,indiceMinimo,datosPacientes,contadorPa
 				datosPacientes[indiceMinimo, x] = aux
 			FinPara
 		FinPara
-		Para k = 0 hasta contadorPacientes -1 Hacer
+		Para k = 0 hasta contadorPacientes -1 Hacer//impimimos los datos ordenados
 			Escribir Sin Saltar "Nombre Paciente: ",datosPacientes[k,0]," - "
 			Escribir Sin Saltar "DNI: ",datosPacientes[k,1]," - "
 			Escribir Sin Saltar "Edad: ",datosPacientes[k,2]," - "
@@ -217,7 +224,6 @@ SubProceso ordenarPacientes(aux,tipoOrden,indiceMinimo,datosPacientes,contadorPa
 						Escribir Sin Saltar "Vacuna a aplicar: ",datosPacientes[x,3]," - "
 						Escribir Sin saltar "Día turno: ",datosPacientes[x,4], " - "
 						Escribir Sin saltar "Horario Turno: ",datosPacientes[x,5]
-						Escribir "================================================================================"
 						
 					FinSi
 				FinPara
@@ -228,7 +234,7 @@ SubProceso ordenarPacientes(aux,tipoOrden,indiceMinimo,datosPacientes,contadorPa
 FinSubproceso
 
 //Subproceso listados
-SubProceso listados(datosPacientes, contadorVacunas, turnos, vacuna)
+SubProceso listados(contadorVacunas, turnos, vacuna)
 	Definir contadorTurno Como Entero
 	Definir opcionListado Como Caracter
 	Escribir "================================================================================"
@@ -261,17 +267,8 @@ SubProceso listados(datosPacientes, contadorVacunas, turnos, vacuna)
 	Mientras Que Mayusculas(opcionListado) <> "A" y Mayusculas(opcionListado) <> "B"
 FinSubProceso
 
-funcion  validacion <- validacionDatos(varCadena) //Subproceso para validar que no se ingrese una cadena vacía
-    Definir validacion como logico
-    validacion = falso
-    Si varCadena = "" Entonces
-        validacion = Verdadero
-    FinSi
-FinFuncion
-
 SubProceso cargaDatos(vacuna,turnos)
-	
-	//carga vacunas.
+	//precarga vacunas.
 	vacuna[0] = "Neumococo Conjugada"
 	vacuna[1] = "Poliomelitis"
 	vacuna[2] = "Quintuple"
